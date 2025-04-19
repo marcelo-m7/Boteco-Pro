@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import login, pedidos, estoque, funcionarios, faturas, pratos, menus
+from app.routers import login, pedidos, estoque, funcionarios, faturas, pratos, menus, mesa
+from dotenv import load_dotenv
 
+load_dotenv()
 app = FastAPI(title="Boteco_PRO API")
 
 # Adicione este middleware CORS
@@ -14,6 +16,7 @@ app.add_middleware(
 )
 
 app.include_router(login.router)
+app.include_router(mesa.router)
 app.include_router(pedidos.router)
 app.include_router(estoque.router)
 app.include_router(funcionarios.router)
