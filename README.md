@@ -110,9 +110,7 @@ Code released under the **MIT License** – see [LICENSE](LICENSE).
 
 ### 🙌 Acknowledgements
 
-* Professors and colleagues of the Cloud Computing UC – UAlg
 * Open-source Flutter community for awesome packages
-* All botecos que inspiraram o clima descontraído e as cores do app 🍻
 
 ---
 
