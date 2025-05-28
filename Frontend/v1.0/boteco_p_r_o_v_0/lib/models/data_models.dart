@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:uuid/uuid.dart';
 
 // Classe para geração de IDs únicos

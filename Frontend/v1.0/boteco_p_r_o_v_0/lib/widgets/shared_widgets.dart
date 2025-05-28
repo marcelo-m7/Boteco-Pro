@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../models/data_models.dart';
-import '../theme.dart';
 import 'package:intl/intl.dart';
 
 // Formata valor como moeda brasileira

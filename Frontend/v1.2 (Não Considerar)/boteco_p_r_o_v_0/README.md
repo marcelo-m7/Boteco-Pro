@@ -9,7 +9,7 @@ To use the corrected models:
 
 ```dart
 // Import corrected models
-import 'package:dreamflow/models/corrected_import.dart';
+import 'package:botecopro/models/corrected_import.dart';
 
 // Use fixed models directly
 final product = Produto(
