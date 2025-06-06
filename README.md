@@ -24,8 +24,7 @@ O frontend consome a API para obter ou persistir dados. Enquanto a implementaç�
 
 - `backend/docs/` contém detalhes de modelagem e dos objetos (Views, SPs etc.).
 - `docs/MVP.md` descreve o plano de implementação inicial do frontend.
-- `frontend/AGENTS.md` possui instruções para os agentes que trabalharão no frontend.
-
+«
 Consulte cada pasta para informações específicas de instalação e execução.
 
 ## Docker Compose
