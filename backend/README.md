@@ -13,7 +13,6 @@ Este diretório reúne a documentação do banco de dados, os scripts SQL e, fut
 ```
 backend/
   README.md
-  AGENTS.md            - instruções para implementação do backend
   docs/                - modelagem e documentos de referência
   src/
     db/                - scripts SQL e configurações de conexão
