@@ -1,8 +1,9 @@
 import os
+from pathlib import Path
 import pytest
 import pyodbc
 
-SQL_DIR = os.path.join(os.path.dirname(__file__), '..', 'sql')
+SQL_DIR = Path(__file__).resolve().parents[1] / 'db' / 'sql'
 
 # Helper to execute scripts separated by GO
 def run_sql_script(cursor, path):
@@ -33,7 +34,7 @@ def conn():
 
 def test_create_tables(conn):
     cur = conn.cursor()
-    run_sql_script(cur, os.path.join(SQL_DIR, '01_create_tables.sql'))
+    run_sql_script(cur, SQL_DIR / '01_create_tables.sql')
     cur.execute("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='Prato'")
     assert cur.fetchone()[0] == 1
 
