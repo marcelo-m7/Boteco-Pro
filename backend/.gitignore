@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+roll_back.sql
 # Virtual environment
 venv/
 env/

@@ -1,0 +1,1 @@
+DROP view dbo.iv_estoque_saida_agregado
