@@ -1,3 +1,7 @@
+USE BotecoPro;
+GO
+
+
 -- =========================================================================
 -- Script: 04_create_functions.sql
 -- Objetivo: Criação de Functions (Scalar e Table-Valued)

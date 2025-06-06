@@ -1,3 +1,5 @@
+USE BotecoPro;
+GO
 -- =========================================================================
 -- Script: 05_create_stored_procedures.sql
 -- Objetivo: Criação de Stored Procedures para consultas parametrizadas

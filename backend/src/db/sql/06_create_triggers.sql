@@ -1,3 +1,6 @@
+USE BotecoPro;
+GO
+
 -- =========================================================================
 -- Script: 06_create_triggers.sql
 -- Objetivo: Criação de Triggers para automatizar estoque, faturas e encomendas

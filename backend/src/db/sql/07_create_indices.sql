@@ -1,3 +1,5 @@
+USE BotecoPro;
+GO
 -- =========================================================================
 -- Script: 07_create_indices.sql
 -- Objetivo: Criação de índices adicionais para otimização de consultas
