@@ -1,0 +1,5 @@
+[
+  {"prato_id": 1, "nome": "Feijoada", "categoria_id": 1, "tempo_preparo": 60, "preco_base": 30.0},
+  {"prato_id": 2, "nome": "Pastel", "categoria_id": 2, "tempo_preparo": 15, "preco_base": 8.5},
+  {"prato_id": 3, "nome": "Moqueca", "categoria_id": 1, "tempo_preparo": 45, "preco_base": 25.0}
+]
