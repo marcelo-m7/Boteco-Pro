@@ -1,5 +1,8 @@
+USE BotecoPro;
+GO
+
 -- =========================================================================
--- Script: 
+-- Script: 09_testes_crud.sql
 -- Objetivo: Testar CRUD via Stored Procedures da API Boteco Pro
 -- =========================================================================
 
@@ -7,9 +10,8 @@
    INSTRUÇÕES
    ----------
    Execute este script após ter carregado todos os objetos (tabelas, SPs, etc.).
-   Cada seção testa uma entidade diferente via suas SPs de CRUD.  
-   Verifique os resultados retornados (IDs, status, mensagens de erro).
-   Use o SSMS ou ferramenta compatível para visualizar saídas.
+   Cada seção testa uma entidade diferente via suas SPs de CRUD.
+   Remova/Comente os GO internos conforme indicado para evitar perda de variáveis.
    ========================================================================= */
 
 ----------------------------------------
@@ -27,10 +29,8 @@ EXEC sp_cadastrar_cliente
     @cidade = 'Lisboa',
     @codigo_postal = '1000-000',
     @contribuinte = '111222333';
--- Capturar ID retornado
-SELECT @cliente_id = cliente_id FROM (SELECT SCOPE_IDENTITY() AS cliente_id) AS tmp; 
--- Exibir ID
-PRINT 'Novo cliente_id:' + CAST(@cliente_id AS VARCHAR(10));
+SELECT @cliente_id = SCOPE_IDENTITY();
+PRINT 'Novo cliente_id: ' + CAST(@cliente_id AS VARCHAR(10));
 
 -- 1.2. Atualizar cliente existente
 EXEC sp_atualizar_cliente
@@ -42,7 +42,6 @@ EXEC sp_atualizar_cliente
     @cidade = 'Porto',
     @codigo_postal = '4000-000',
     @contribuinte = '444555666';
--- Espera status 0
 PRINT 'Cliente atualizado com sucesso.';
 
 -- 1.3. Tentar atualizar cliente inexistente (deve falhar)
@@ -57,6 +56,7 @@ END CATCH;
 
 GO
 
+
 ----------------------------------------
 -- 2. Teste CRUD de Mesa
 ----------------------------------------
@@ -68,7 +68,7 @@ EXEC sp_cadastrar_mesa
     @numero = 10,
     @capacidade = 4;
 SELECT @mesa_id = SCOPE_IDENTITY();
-PRINT 'Novo mesa_id:' + CAST(@mesa_id AS VARCHAR(10));
+PRINT 'Novo mesa_id: ' + CAST(@mesa_id AS VARCHAR(10));
 
 -- 2.2. Atualizar mesa existente
 EXEC sp_atualizar_mesa
@@ -90,6 +90,7 @@ END CATCH;
 
 GO
 
+
 ----------------------------------------
 -- 3. Teste CRUD de Carreira
 ----------------------------------------
@@ -101,7 +102,7 @@ EXEC sp_cadastrar_carreira
     @nome = 'Testador',
     @salario_mensal = 1500.00;
 SELECT @carreira_id = SCOPE_IDENTITY();
-PRINT 'Novo carreira_id:' + CAST(@carreira_id AS VARCHAR(10));
+PRINT 'Novo carreira_id: ' + CAST(@carreira_id AS VARCHAR(10));
 
 -- 3.2. Atualizar carreira existente
 EXEC sp_atualizar_carreira
@@ -122,6 +123,7 @@ END CATCH;
 
 GO
 
+
 ----------------------------------------
 -- 4. Teste CRUD de Funcionário
 ----------------------------------------
@@ -138,7 +140,7 @@ EXEC sp_cadastrar_funcionario
     @carreira_id = @carreira_id,
     @data_admissao = '2025-05-01';
 SELECT @funcionario_id = SCOPE_IDENTITY();
-PRINT 'Novo funcionario_id:' + CAST(@funcionario_id AS VARCHAR(10));
+PRINT 'Novo funcionario_id: ' + CAST(@funcionario_id AS VARCHAR(10));
 
 -- 4.2. Atualizar funcionário existente
 EXEC sp_atualizar_funcionario
@@ -162,6 +164,7 @@ END CATCH;
 
 GO
 
+
 ----------------------------------------
 -- 5. Teste CRUD de Fornecedor
 ----------------------------------------
@@ -178,7 +181,7 @@ EXEC sp_cadastrar_fornecedor
     @codigo_postal = '3000-000',
     @pais = 'Portugal';
 SELECT @fornecedor_id = SCOPE_IDENTITY();
-PRINT 'Novo fornecedor_id:' + CAST(@fornecedor_id AS VARCHAR(10));
+PRINT 'Novo fornecedor_id: ' + CAST(@fornecedor_id AS VARCHAR(10));
 
 -- 5.2. Atualizar fornecedor existente
 EXEC sp_atualizar_fornecedor
@@ -199,6 +202,7 @@ END CATCH;
 
 GO
 
+
 ----------------------------------------
 -- 6. Teste CRUD de Produto
 ----------------------------------------
@@ -216,7 +220,7 @@ EXEC sp_cadastrar_produto
     @stock_encomenda = 50,
     @fornecedor_id = @fornecedor_id;
 SELECT @produto_id = SCOPE_IDENTITY();
-PRINT 'Novo produto_id:' + CAST(@produto_id AS VARCHAR(10));
+PRINT 'Novo produto_id: ' + CAST(@produto_id AS VARCHAR(10));
 
 -- 6.2. Atualizar produto existente
 EXEC sp_atualizar_produto
@@ -243,6 +247,7 @@ END CATCH;
 
 GO
 
+
 ----------------------------------------
 -- 7. Teste CRUD de Prato e PratoIngrediente
 ----------------------------------------
@@ -257,7 +262,7 @@ EXEC sp_cadastrar_prato
     @tempo_preparo = 15,
     @preco_base = 5.00;
 SELECT @prato_id = SCOPE_IDENTITY();
-PRINT 'Novo prato_id:' + CAST(@prato_id AS VARCHAR(10));
+PRINT 'Novo prato_id: ' + CAST(@prato_id AS VARCHAR(10));
 
 -- 7.2. Atualizar prato existente
 EXEC sp_atualizar_prato
@@ -302,6 +307,7 @@ END CATCH;
 
 GO
 
+
 ----------------------------------------
 -- 8. Teste CRUD de MenuEspecial e MenuEspecialPrato
 ----------------------------------------
@@ -316,7 +322,7 @@ EXEC sp_cadastrar_menu_especial
     @data_fim = '2025-07-05',
     @preco_total = 25.00;
 SELECT @menu_especial_id = SCOPE_IDENTITY();
-PRINT 'Novo menu_especial_id:' + CAST(@menu_especial_id AS VARCHAR(10));
+PRINT 'Novo menu_especial_id: ' + CAST(@menu_especial_id AS VARCHAR(10));
 
 -- 8.2. Atualizar menu especial existente
 EXEC sp_atualizar_menu_especial
@@ -360,6 +366,7 @@ END CATCH;
 
 GO
 
+
 ----------------------------------------
 -- 9. Teste CRUD de Reserva
 ----------------------------------------
@@ -374,7 +381,7 @@ EXEC sp_cadastrar_reserva
     @hora_reserva = '18:00',
     @quantidade_pessoas = 3;
 SELECT @reserva_id = SCOPE_IDENTITY();
-PRINT 'Novo reserva_id:' + CAST(@reserva_id AS VARCHAR(10));
+PRINT 'Novo reserva_id: ' + CAST(@reserva_id AS VARCHAR(10));
 
 -- 9.2. Atualizar reserva existente
 EXEC sp_atualizar_reserva
@@ -396,6 +403,7 @@ END CATCH;
 
 GO
 
+
 ----------------------------------------
 -- 10. Teste CRUD de Pedido e PedidoItem
 ----------------------------------------
@@ -408,7 +416,7 @@ EXEC sp_cadastrar_pedido
     @funcionario_id = @funcionario_id,
     @cliente_id = @cliente_id;
 SELECT @novo_pedido_id = SCOPE_IDENTITY();
-PRINT 'Novo pedido_id:' + CAST(@novo_pedido_id AS VARCHAR(10));
+PRINT 'Novo pedido_id: ' + CAST(@novo_pedido_id AS VARCHAR(10));
 
 -- 10.2. Adicionar item de prato ao pedido
 EXEC sp_adicionar_item_pedido
@@ -424,7 +432,7 @@ PRINT 'Item de prato adicionado ao pedido.';
 EXEC sp_adicionar_item_pedido
     @pedido_id = @novo_pedido_id,
     @prato_id = NULL,
-    @produto_id = 7,       -- produto_id 7 = 'Cerveja' (seed anterior)
+    @produto_id = 7,       -- produto_id 7 = 'Cerveja'
     @quantidade = 3,
     @preco_unitario = 2.50,
     @iva = 23.00;
@@ -458,7 +466,7 @@ EXEC sp_cadastrar_pedido
     @funcionario_id = @funcionario_id,
     @cliente_id = @cliente_id;
 SELECT @pedido_cancelar_id = SCOPE_IDENTITY();
-PRINT 'Novo pedido para cancelar:' + CAST(@pedido_cancelar_id AS VARCHAR(10));
+PRINT 'Novo pedido para cancelar: ' + CAST(@pedido_cancelar_id AS VARCHAR(10));
 
 -- Adicionar item de prato
 EXEC sp_adicionar_item_pedido
@@ -477,6 +485,7 @@ PRINT 'Pedido cancelado e estoque revertido com sucesso.';
 
 GO
 
+
 ----------------------------------------
 -- 11. Teste CRUD de Encomenda e EncomendaItem
 ----------------------------------------
@@ -487,7 +496,7 @@ DECLARE @encomenda_id INT;
 EXEC sp_cadastrar_encomenda
     @fornecedor_id = @fornecedor_id;
 SELECT @encomenda_id = SCOPE_IDENTITY();
-PRINT 'Novo encomenda_id:' + CAST(@encomenda_id AS VARCHAR(10));
+PRINT 'Novo encomenda_id: ' + CAST(@encomenda_id AS VARCHAR(10));
 
 -- 11.2. Adicionar item à encomenda
 EXEC sp_adicionar_item_encomenda
@@ -516,6 +525,7 @@ END CATCH;
 
 GO
 
+
 ----------------------------------------
 -- 12. Teste CRUD de Registro de Horas
 ----------------------------------------
@@ -529,7 +539,7 @@ EXEC sp_registrar_horas
     @horas_normais = 8.00,
     @horas_extra = 2.00;
 SELECT @registro_horas_id = SCOPE_IDENTITY();
-PRINT 'Novo registro_horas_id:' + CAST(@registro_horas_id AS VARCHAR(10));
+PRINT 'Novo registro_horas_id: ' + CAST(@registro_horas_id AS VARCHAR(10));
 
 -- 12.2. Atualizar registro de horas existente
 EXEC sp_atualizar_registro_horas
@@ -549,6 +559,7 @@ BEGIN CATCH
 END CATCH;
 
 GO
+
 
 ----------------------------------------
 -- 13. Teste CRUD de Fatura Manual
@@ -571,7 +582,7 @@ EXEC sp_cadastrar_fatura_manual
     @iva_bebida = 0.46,
     @total = 8.11;
 SELECT @fatura_manual_id = SCOPE_IDENTITY();
-PRINT 'Novo fatura_manual_id:' + CAST(@fatura_manual_id AS VARCHAR(10));
+PRINT 'Novo fatura_manual_id: ' + CAST(@fatura_manual_id AS VARCHAR(10));
 
 -- 13.2. Tentar cadastrar fatura para pedido inexistente
 BEGIN TRY
@@ -592,4 +603,3 @@ GO
 -- =========================================================================
 -- FIM DOS TESTES CRUD
 -- =========================================================================
-

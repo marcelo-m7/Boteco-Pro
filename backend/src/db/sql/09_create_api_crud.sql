@@ -1,3 +1,5 @@
+USE BotecoPro;
+GO
 -- =========================================================================
 -- Script: 09_create_api_crud.sql
 -- Objetivo: Criação de Stored Procedures para CRUD (cadastramento e atualizações)

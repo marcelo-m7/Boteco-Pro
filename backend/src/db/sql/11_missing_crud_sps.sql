@@ -1,3 +1,6 @@
+USE BotecoPro;
+GO
+
 -- =========================================================================
 -- Script: 11_missing_crud_sps.sql
 -- Objetivo: Criação dos Stored Procedures faltantes para operações de DELETE/UPDATE
@@ -10,7 +13,7 @@
    Parâmetros:
      @cliente_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_excluir_cliente
+CREATE OR ALTER PROCEDURE sp_excluir_cliente
     @cliente_id INT
 AS
 BEGIN
@@ -41,7 +44,7 @@ GO
    Parâmetros:
      @mesa_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_excluir_mesa
+CREATE OR ALTER PROCEDURE sp_excluir_mesa
     @mesa_id INT
 AS
 BEGIN
@@ -75,7 +78,7 @@ GO
    Parâmetros:
      @carreira_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_excluir_carreira
+CREATE OR ALTER PROCEDURE sp_excluir_carreira
     @carreira_id INT
 AS
 BEGIN
@@ -106,7 +109,7 @@ GO
    Parâmetros:
      @funcionario_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_excluir_funcionario
+CREATE OR ALTER PROCEDURE sp_excluir_funcionario
     @funcionario_id INT
 AS
 BEGIN
@@ -143,7 +146,7 @@ GO
    Parâmetros:
      @fornecedor_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_excluir_fornecedor
+CREATE OR ALTER PROCEDURE sp_excluir_fornecedor
     @fornecedor_id INT
 AS
 BEGIN
@@ -174,7 +177,7 @@ GO
    Parâmetros:
      @produto_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_excluir_produto
+CREATE OR ALTER PROCEDURE sp_excluir_produto
     @produto_id INT
 AS
 BEGIN
@@ -211,7 +214,7 @@ GO
    Parâmetros:
      @prato_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_excluir_prato
+CREATE OR ALTER PROCEDURE sp_excluir_prato
     @prato_id INT
 AS
 BEGIN
@@ -250,7 +253,7 @@ GO
    Parâmetros:
      @menu_especial_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_excluir_menu_especial
+CREATE OR ALTER PROCEDURE sp_excluir_menu_especial
     @menu_especial_id INT
 AS
 BEGIN
@@ -289,7 +292,7 @@ GO
    Parâmetros:
      @pedido_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_excluir_pedido
+CREATE OR ALTER PROCEDURE sp_excluir_pedido
     @pedido_id INT
 AS
 BEGIN
@@ -310,7 +313,7 @@ BEGIN
         RETURN;
     END
 
-    -- Reverter estoque e excluir itens
+    -- Reverter estoque e excluir itens via sp_cancelar_pedido
     EXEC sp_cancelar_pedido @pedido_id;
 
     DELETE FROM PedidoItem WHERE pedido_id = @pedido_id;
@@ -328,7 +331,13 @@ GO
    Parâmetros:
      @pedido_item_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_remover_item_pedido
+/* =========================================================================
+   sp_remover_item_pedido  (versão corrigida: @custo_unit declarado só 1 vez)
+   -------------------------------------------------------------------------
+   Remove um item de pedido pendente e devolve o estoque correspondente.
+   Parâmetros: @pedido_item_id INT
+   ========================================================================= */
+CREATE OR ALTER PROCEDURE sp_remover_item_pedido
     @pedido_item_id INT
 AS
 BEGIN
@@ -341,20 +350,21 @@ BEGIN
     END
 
     DECLARE 
-      @pedido_id    INT,
-      @prato_id     INT,
-      @produto_id   INT,
-      @qtd_item     INT;
+        @pedido_id   INT,
+        @prato_id    INT,
+        @produto_id  INT,
+        @qtd_item    INT,
+        @status      VARCHAR(20),
+        @custo_unit  DECIMAL(10,2);   -- <<<<<< ÚNICA declaração de @custo_unit
 
     SELECT 
-      @pedido_id = pedido_id,
-      @prato_id  = prato_id,
-      @produto_id = produto_id,
-      @qtd_item  = quantidade
+        @pedido_id  = pedido_id,
+        @prato_id   = prato_id,
+        @produto_id = produto_id,
+        @qtd_item   = quantidade
     FROM PedidoItem
     WHERE pedido_item_id = @pedido_item_id;
 
-    DECLARE @status VARCHAR(20);
     SELECT @status = status FROM Pedido WHERE pedido_id = @pedido_id;
 
     IF @status <> 'pendente'
@@ -363,12 +373,16 @@ BEGIN
         RETURN;
     END
 
+    /* ----------- Tratamento se for prato (repor cada ingrediente) ----------- */
     IF @prato_id IS NOT NULL
     BEGIN
-        DECLARE @ingred_id INT;
-        DECLARE @qtd_ingred DECIMAL(10,3);
+        DECLARE 
+            @ingred_id  INT,
+            @qtd_ingred DECIMAL(10,3);
+
         DECLARE cursor_ingr CURSOR FOR
-            SELECT produto_id, quantidade_necessaria * @qtd_item
+            SELECT produto_id,
+                   quantidade_necessaria * @qtd_item
             FROM PratoIngrediente
             WHERE prato_id = @prato_id;
 
@@ -377,13 +391,17 @@ BEGIN
 
         WHILE @@FETCH_STATUS = 0
         BEGIN
-            DECLARE @custo DECIMAL(10,2);
-            SELECT @custo = custo_unitario FROM Produto WHERE produto_id = @ingred_id;
+            SELECT @custo_unit = custo_unitario
+            FROM   Produto
+            WHERE  produto_id = @ingred_id;
 
             INSERT INTO MovimentacaoEstoque (
-                produto_id, data_movimentacao, tipo, quantidade, preco_unitario, pedido_id
-            ) VALUES (
-                @ingred_id, GETDATE(), 'entrada', @qtd_ingred, @custo, @pedido_id
+                produto_id, data_movimentacao, tipo, quantidade,
+                preco_unitario, pedido_id
+            )
+            VALUES (
+                @ingred_id, GETDATE(), 'entrada',
+                @qtd_ingred, @custo_unit, @pedido_id
             );
 
             EXEC sp_atualizar_stock_produto @ingred_id;
@@ -393,15 +411,20 @@ BEGIN
         CLOSE cursor_ingr;
         DEALLOCATE cursor_ingr;
     END
+    /* -------------- Tratamento se for produto avulso ----------------- */
     ELSE IF @produto_id IS NOT NULL
     BEGIN
-        DECLARE @custo DECIMAL(10,2);
-        SELECT @custo = custo_unitario FROM Produto WHERE produto_id = @produto_id;
+        SELECT @custo_unit = custo_unitario
+        FROM   Produto
+        WHERE  produto_id = @produto_id;
 
         INSERT INTO MovimentacaoEstoque (
-            produto_id, data_movimentacao, tipo, quantidade, preco_unitario, pedido_id
-        ) VALUES (
-            @produto_id, GETDATE(), 'entrada', @qtd_item, @custo, @pedido_id
+            produto_id, data_movimentacao, tipo, quantidade,
+            preco_unitario, pedido_id
+        )
+        VALUES (
+            @produto_id, GETDATE(), 'entrada',
+            @qtd_item, @custo_unit, @pedido_id
         );
 
         EXEC sp_atualizar_stock_produto @produto_id;
@@ -413,6 +436,8 @@ END;
 GO
 
 
+
+
 /* =========================================================================
    11. sp_excluir_encomenda
    -------------------------------------------------------------------------
@@ -420,7 +445,7 @@ GO
    Parâmetros:
      @encomenda_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_excluir_encomenda
+CREATE OR ALTER PROCEDURE sp_excluir_encomenda
     @encomenda_id INT
 AS
 BEGIN
@@ -456,7 +481,7 @@ GO
    Parâmetros:
      @encomenda_item_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_remover_item_encomenda
+CREATE OR ALTER PROCEDURE sp_remover_item_encomenda
     @encomenda_item_id INT
 AS
 BEGIN
@@ -503,7 +528,7 @@ GO
    Parâmetros:
      @registro_horas_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_excluir_registro_horas
+CREATE OR ALTER PROCEDURE sp_excluir_registro_horas
     @registro_horas_id INT
 AS
 BEGIN
@@ -528,7 +553,7 @@ GO
    Parâmetros:
      @fatura_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_excluir_fatura
+CREATE OR ALTER PROCEDURE sp_excluir_fatura
     @fatura_id INT
 AS
 BEGIN
@@ -554,7 +579,7 @@ GO
    Parâmetros:
      @fatura_item_id INT
    ========================================================================= */
-CREATE PROCEDURE sp_excluir_item_fatura
+CREATE OR ALTER PROCEDURE sp_excluir_item_fatura
     @fatura_item_id INT
 AS
 BEGIN
@@ -579,4 +604,3 @@ BEGIN
     SELECT 0 AS status;
 END;
 GO
-
