@@ -1,10 +1,12 @@
-# Notas - Projeto de Base de Dados II
+# Projeto de Base de Dados II
 
 **Aluno:** Marcelo Santos  
 **Email:** a79433@ualg.pt  
 **Disciplina:** Base de Dados II  
 **Instituição:** Universidade do Algarve  
 **Data:** Abril de 2025  
+
+**[Repositório do Projeto GitHub](https://github.com/marcelo-m7/Boteco_PRO)**
 
 ---
 
