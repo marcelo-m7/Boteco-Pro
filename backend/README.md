@@ -22,9 +22,27 @@ Tecnologias utilizadas:
 ## 2. Modelo Entidade-Relacionamento
 
 O modelo entidade-relacionamento foi gerado através do Microsoft SQL Server e contempla as seguintes entidades principais:
-- Cliente, Mesa, Pedido, Pedido_Prato, Prato, Produto, Fornecedor
-- Funcionário, Carreira, Nivel_Carreira, Horas_Trabalhadas
-- Categoria, Fatura, Evento_Especial, Menu_Especial, Menu_Especial_Prato
+- `Categoria`
+- `Fornecedor`
+- `Produto`
+- `Prato`
+- `Bebida`
+- `Prato_Produto`
+- `Bebida_Produto`
+- `Carreira`
+- `Nivel_Carreira`
+- `Funcionario`
+- `Funcionario_Login`
+- `Horas_Trabalhadas`
+- `Cliente`
+- `Mesa`
+- `Pedido`
+- `Pedido_Prato`
+- `Pedido_Bebida`
+- `Fatura`
+- `Evento_Especial`
+- `Menu_Especial`
+- `Menu_Especial_Prato`
 
 Cada entidade foi devidamente normalizada até a 3ª Forma Normal.
 
@@ -89,6 +107,7 @@ O sistema desenvolvido cobre todas as funcionalidades propostas no enunciado da 
 
 - [Instruções para configuração do banco de dados](docs/INSTRUCOES_BANCO.md)
 - [Relatório técnico detalhado](docs/RELATORIO_TECNICO.md)
+- [Relatório da estrutura do banco](docs/RELATORIO_DB_COMPLETO.md)
 
 ---
 ## 7. Referências
