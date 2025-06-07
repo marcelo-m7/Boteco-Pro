@@ -1,4 +1,4 @@
-USE BotecoPro;
+USE botecopro_db;
 GO
 
 -- =========================================================================
@@ -136,10 +136,10 @@ GO
    9. Inserir Funcionários
 ------------------------------------------------ */
 INSERT INTO Funcionario (nome, data_nascimento, telefone, email, cargo, carreira_id, data_admissao) VALUES
-    ('Pedro Costa',   '1990-05-15', '914567890', 'pedro.costa@botecopro.com',   'Cozinheiro',        1, '2024-01-10'),
-    ('Sofia Andrade', '1985-03-22', '915678901', 'sofia.andrade@botecopro.com', 'Cozinheiro',        2, '2023-11-05'),
-    ('Luís Gomes',    '1992-08-10', '916789012', 'luis.gomes@botecopro.com',    'Empregado de Mesa', 3, '2025-02-01'),
-    ('Carla Rocha',   '1980-12-30', '917890123', 'carla.rocha@botecopro.com',   'Gerente de Sala',   4, '2022-07-15');
+    ('Pedro Costa',   '1990-05-15', '914567890', 'pedro.costa@botecopro_db.com',   'Cozinheiro',        1, '2024-01-10'),
+    ('Sofia Andrade', '1985-03-22', '915678901', 'sofia.andrade@botecopro_db.com', 'Cozinheiro',        2, '2023-11-05'),
+    ('Luís Gomes',    '1992-08-10', '916789012', 'luis.gomes@botecopro_db.com',    'Empregado de Mesa', 3, '2025-02-01'),
+    ('Carla Rocha',   '1980-12-30', '917890123', 'carla.rocha@botecopro_db.com',   'Gerente de Sala',   4, '2022-07-15');
 GO
 
 

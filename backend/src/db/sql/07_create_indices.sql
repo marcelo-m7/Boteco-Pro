@@ -1,4 +1,4 @@
-USE BotecoPro;
+USE botecopro_db;
 GO
 -- =========================================================================
 -- Script: 07_create_indices.sql

@@ -1,4 +1,4 @@
-USE BotecoPro;
+USE botecopro_db;
 -- =========================================================================
 -- Script: 01_create_tables.sql
 -- Objetivo: Criação de todas as tabelas principais do banco de dados

@@ -2,7 +2,7 @@
 -- Script: 02_create_views.sql
 -- Objetivo: Criação de Views de consulta para uso pela API
 -- =========================================================================
-USE BotecoPro;
+USE botecopro_db;
 GO
 
 /* ------------------------------------------------

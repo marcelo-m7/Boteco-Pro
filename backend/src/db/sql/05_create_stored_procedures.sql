@@ -1,4 +1,4 @@
-USE BotecoPro;
+USE botecopro_db;
 GO
 -- =========================================================================
 -- Script: 05_create_stored_procedures.sql

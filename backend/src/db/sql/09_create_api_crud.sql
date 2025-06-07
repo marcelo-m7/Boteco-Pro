@@ -1,4 +1,4 @@
-USE BotecoPro;
+USE botecopro_db;
 GO
 -- =========================================================================
 -- Script: 09_create_api_crud.sql
